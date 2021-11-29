@@ -47,18 +47,21 @@ MountEverestData <-
 MountEverestData$Dth <- as.factor(ifelse(MountEverestData$Dth == "Y", 1, 0)) #1 = death, 0 = alive
 MountEverestData$Oxy <- as.factor(ifelse(MountEverestData$Oxy == "Y", 1, 0)) #1 = death, 0 = alive
 MountEverestData$YearOnly <- as.integer(substr(MountEverestData$Yr.Seas, 1, 4))
+MountEverestData$Helper <- as.integer(substr(MountEverestData$Yr.Seas, 1, 3))
 
-MountEverestData$Decade <- ifelse(MountEverestData$YearOnly >= 1950, "1950", "1960")
 
 
-MountEverestData$Decade <- " "
-if (MountEverestData$YearOnly >= 1950 && MountEverestData$YearOnly < 1960) {
-  MountEverestData$Decade == "1950"
-} else if (MountEverestData$YearOnly >= 1960 && MountEverestData$YearOnly < 1970) {
-  MountEverestData$Decade == "1960"
-} else {
-  MountEverestData$Decade == "1970"
-}
+
+MountEverestData %>% mutate(Decade =
+                     case_when(Helper == 195 ~ "1950", 
+                               Helper == 196 ~ "1960",
+                               Helper == 197 ~ "1970", 
+                               Helper == 198 ~ "1980",
+                               Helper == 199 ~ "1990",
+                               Helper == 200 ~ "2000",
+                               Helper == 201 ~ "2010",
+                               Helper == 202 ~ "2020")
+)
 
 View(MountEverestData)
 head(MountEverestData, 10)
