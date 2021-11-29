@@ -3,9 +3,11 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-```{r}
+```{r, Warnings = FALSE}
 library(tidyverse)
 library(dplyr)
+library(mosaic)
+library(ggplot2)
 ```
 
 ```{r}
@@ -32,7 +34,39 @@ MountEverestData <-
   
 MountEverestData$Dth <- as.integer(ifelse(MountEverestData$Dth == "Y", 1, 0)) #1 = death, 0 = alive
 MountEverestData$Oxy <- as.integer(ifelse(MountEverestData$Oxy == "Y", 1, 0)) #1 = death, 0 = alive
-MountEverestData$Dth <- as.integer(MountEverestData$Dth)
-MountEverestData$Oxy <- as.integer(MountEverestData$Oxy)
-head(MountEverestData)
+
+head(MountEverestData, 10)
 ```
+
+1. Our population of interest are the all of the adults that climbed Mount Everest from 1953 through 1920
+
+2. One parameter of interest is the population age. The population mean age is 34.69089. 
+```{r}
+mu = mean(MountEverestData$Age)
+mu
+```
+3. Sample Size for Stratified Random Sampling 
+- As we can see Yr.Seas and Citizenship have way too many possible strata 
+```{r}
+#Trying to find Strata
+ggplot(
+  data = MountEverestData, 
+  aes(x = Host, y = Age)) +
+  geom_boxplot()  + 
+  labs(title = "Host vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = Yr.Seas, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Year vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = Citizenship, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Citizenship vs. Age")
+```
+
