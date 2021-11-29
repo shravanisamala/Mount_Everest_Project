@@ -46,7 +46,21 @@ MountEverestData <-
   
 MountEverestData$Dth <- as.factor(ifelse(MountEverestData$Dth == "Y", 1, 0)) #1 = death, 0 = alive
 MountEverestData$Oxy <- as.factor(ifelse(MountEverestData$Oxy == "Y", 1, 0)) #1 = death, 0 = alive
-MountEverestData$YearOnly <- "1990"
+MountEverestData$YearOnly <- as.integer(substr(MountEverestData$Yr.Seas, 1, 4))
+
+MountEverestData$Decade <- ifelse(MountEverestData$YearOnly >= 1950, "1950", "1960")
+
+
+MountEverestData$Decade <- " "
+if (MountEverestData$YearOnly >= 1950 && MountEverestData$YearOnly < 1960) {
+  MountEverestData$Decade == "1950"
+} else if (MountEverestData$YearOnly >= 1960 && MountEverestData$YearOnly < 1970) {
+  MountEverestData$Decade == "1960"
+} else {
+  MountEverestData$Decade == "1970"
+}
+
+View(MountEverestData)
 head(MountEverestData, 10)
 ```
 
@@ -101,5 +115,12 @@ ggplot(
   geom_boxplot()  + 
   theme(axis.text.x = element_text(angle = 90)) +
   labs(title = "Death vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = YearOnly, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Year Only vs. Age")
 ```
 
