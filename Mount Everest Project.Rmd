@@ -4,9 +4,31 @@ output: html_notebook
 ---
 
 ```{r}
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
 #Import data
 myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
 
 MountEverestData <- read.csv(myFile)
 head(MountEverestData)
+
+MountEverestData <- 
+  MountEverestData %>%
+  rename(Peak = Peak., 
+         Name = Name., 
+         Yr.Seas = Yr.Seas., 
+         Date = Date., 
+         Time = Time., 
+         Citizenship = Citizenship., 
+         Sex = Sex., 
+         Age = Age., 
+         Oxy = Oxy., 
+         Dth = Dth., 
+         Host = Host.)
+  
+#head(MountEverestData)
+MountEverestData$Dth <- ifelse(MountEverestData$Dth == "Y", 1, 0)
 ```
