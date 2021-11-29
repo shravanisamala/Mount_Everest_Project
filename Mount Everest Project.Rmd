@@ -10,6 +10,18 @@ library(mosaic)
 library(ggplot2)
 ```
 
+PEAK ID- This is a unique identifier for the mountain
+Name - Name of the climber
+Yr/Seas- Year and Season of the ascent
+Date- Date of Ascent
+Time- Time of Ascent
+Citizenship-
+Sex
+Age
+Oxygen - Ascent with/without Oxygen
+Dth- Did the ascent result in death?
+Host - Country
+
 ```{r}
 #Import data
 myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
@@ -32,9 +44,9 @@ MountEverestData <-
          Dth = Dth., 
          Host = Host.)
   
-MountEverestData$Dth <- as.integer(ifelse(MountEverestData$Dth == "Y", 1, 0)) #1 = death, 0 = alive
-MountEverestData$Oxy <- as.integer(ifelse(MountEverestData$Oxy == "Y", 1, 0)) #1 = death, 0 = alive
-
+MountEverestData$Dth <- as.factor(ifelse(MountEverestData$Dth == "Y", 1, 0)) #1 = death, 0 = alive
+MountEverestData$Oxy <- as.factor(ifelse(MountEverestData$Oxy == "Y", 1, 0)) #1 = death, 0 = alive
+MountEverestData$YearOnly <- "1990"
 head(MountEverestData, 10)
 ```
 
@@ -68,5 +80,26 @@ ggplot(
   geom_boxplot()  + 
   theme(axis.text.x = element_text(angle = 90)) +
   labs(title = "Citizenship vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = Sex, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Sex vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = Oxy, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Oxygen vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = Dth, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Death vs. Age")
 ```
 
