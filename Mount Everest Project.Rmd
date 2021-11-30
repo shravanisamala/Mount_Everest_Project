@@ -75,9 +75,9 @@ MountEverestData$Helper <- NULL # removes Helper column because its irrelavent l
 head(MountEverestData, 10)
 ```
 
-1. Our population of interest are the all of the adults that climbed Mount Everest from 1953 through 1920
+### 1. Our population of interest are the all of the adults that climbed Mount Everest from 1953 through 1920
 
-2. One parameter of interest is the population age. The population mean age is 34.69089. 
+### 2. One parameter of interest is the population age. The population mean age is 34.69089. 
 ```{r}
 mu = mean(MountEverestData$Age)
 mu
@@ -85,7 +85,7 @@ mu
 avg = sum(MountEverestData$Age) / length(MountEverestData$Age)
 avg
 ```
-3. Sample Size for Stratified Random Sampling 
+### 3. Sample Size for Stratified Random Sampling 
 - As we can see Yr.Seas and Citizenship have way too many possible strata 
 - Host , Oxy, Death, and Sex seem to be homogenoue like we need. 
 - We made Decade a variable and that looks like it has a lot of variability 
@@ -224,30 +224,29 @@ ggplot(
 ybarst = (1/N) * sum(NiYi)
 ```{r}
 #c 
-StratifiedSample <- 
+### This is the final dataset that we use for calculations. However, it will change every time we sample / run previous code
+StratifiedSampleFinal <- 
   StratifiedSample %>%
     group_by(Sex) %>%
-    summarise(n(), sd(Age), mean(Age))
-
-StratifiedSample <- 
-  StratifiedSample %>%
+    summarise(n(), sd(Age), mean(Age)) %>%
   rename(count = "n()", 
          sd = "sd(Age)", 
          mean = "mean(Age)")
-StratifiedSample['count_Age_Sample'] <- StratifiedSample[2]
-StratifiedSample['sd_Age_Sample'] <- StratifiedSample[3]
-StratifiedSample['mean_Age_Sample'] <- StratifiedSample[4]
+
+StratifiedSampleFinal['count_Age_Sample'] <- StratifiedSampleFinal[2]
+StratifiedSampleFinal['sd_Age_Sample'] <- StratifiedSampleFinal[3]
+StratifiedSampleFinal['mean_Age_Sample'] <- StratifiedSampleFinal[4]
 
 
-StratifiedSample$count <- NULL
-StratifiedSample$sd <- NULL
-StratifiedSample$mean <- NULL
-StratifiedSample
+StratifiedSampleFinal$count <- NULL
+StratifiedSampleFinal$sd <- NULL
+StratifiedSampleFinal$mean <- NULL
+StratifiedSampleFinal
 
-y_bar_st = (1/N) * ((Stratified$count_Age[1] * StratifiedSample$mean_Age_Sample[1]) + (Stratified$count_Age[2] * StratifiedSample$mean_Age_Sample[2]))
+y_bar_st = (1/N) * ((Stratified$count_Age[1] * StratifiedSampleFinal$mean_Age_Sample[1]) + (Stratified$count_Age[2] * StratifiedSampleFinal$mean_Age_Sample[2]))
 y_bar_st
 
-Var_st = (1/(N^2)) * (((710^2)*(1 - (3/710))*((StratifiedSample$sd_Age_Sample[1]^2) / 3)) + ((9474^2)*(1 - (44/9474)) * ((StratifiedSample$sd_Age_Sample[2]^2) / 44)))
+Var_st = (1/(N^2)) * (((710^2)*(1 - (3/710))*((StratifiedSampleFinal$sd_Age_Sample[1]^2) / 3)) + ((9474^2)*(1 - (44/9474)) * ((StratifiedSampleFinal$sd_Age_Sample[2]^2) / 44)))
 Var_st
 
 Bound = 2 * (sqrt(Var_st))
