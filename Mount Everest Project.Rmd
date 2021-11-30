@@ -64,6 +64,8 @@ MountEverestData %>% mutate(Decade =
                                Helper == 201 ~ "2010",
                                Helper == 202 ~ "2020")
 )
+
+
 MountEverestData$Helper <- NULL
 #View(MountEverestData)
 head(MountEverestData, 10)
@@ -138,6 +140,76 @@ ggplot(
   aes(x = Decade, y = Age)) +
   geom_boxplot()  + 
   theme(axis.text.x = element_text(angle = 90)) +
-  labs(title = "Year Only vs. Age")
+  labs(title = "Decade vs. Age")
+```
+
+Step 1: n = (sum (N_k * sd_k))^2 / N^2D + sum(N_i * sd_i)^2
+```{r}
+# Find N
+
+Stratified <- 
+MountEverestData %>%
+  group_by(Sex) %>%
+  summarise(n(), sd(Age), mean(Age))
+Stratified %>%
+  rename(count = "n()", 
+         sd = "sd(Age)", 
+         mean = "mean(Age)")
+
+
+# Stratified <- 
+# MountEverestData %>%
+#   group_by(Decade) %>%
+#   summarise(n(), sd(Age))
+# Stratified %>%
+#   rename(count = "n()")
+```
+
+We will use Neyman Allocation. So N = 10184, and we will make our Bound 3. So n = 47
+```{r}
+x = ((710 * 10.99570) + (9474 * 10.25151))^2
+N = length(MountEverestData$Age)
+B = 3
+D = (B^2) / 4
+
+y = ((710 * 10.99570^2) + (9474 * 10.25151^2))
+n = x/((N^2 * D) + y)
+n
+```
+
+4. Yes, the strata seem to be homogenous. Their means and variances look very similar.
+```{r}
+#a. 
+#Creating first Dataset
+StratifiedSample = sample(MountEverestData, 47, replace = FALSE)
+StratifiedSample
+
+#b. 
+ggplot(
+  data = MountEverestData, 
+  aes(x = Sex, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Sex vs. Age")
+```
+ybarst = (1/N) * sum(NiYi)
+```{r}
+#c 
+StratifiedSample <- 
+  StratifiedSample %>%
+    group_by(Sex) %>%
+    summarise(n(), sd(Age), mean(Age))
+StratifiedSample %>%
+  rename(count = "n()", 
+         sd = "sd(Age)", 
+         mean = "mean(Age)")
+StratifiedSample
+
+y_bar_st = (1/10184) * ((710 * ) + (9474 * 34.66772))
+y_bar_st
+
+Var_st = (1/(10184^2)) * (((710^2)*(1 - (5/710))*((6.09918^2) / 5)) + ((9474^2)*(1 - (42/9474)) * ((11.18592^2) / 5)))
+Var_st
+
 ```
 
