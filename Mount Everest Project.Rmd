@@ -24,9 +24,10 @@ Host - Country
 
 ```{r}
 #Import data
-myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
+#myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
 
-MountEverestData <- read.csv(myFile)
+#MountEverestData <- read.csv(myFile)
+MountEverestData <- read.csv("C:\\Users\\shrav\\Desktop\\Stat 466\\Mount_Everest_Project\\Mt_Everest_Ascent_Data.csv")
 head(MountEverestData)
 
 #Cleaning up data
