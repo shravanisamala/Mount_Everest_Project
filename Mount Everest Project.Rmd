@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
 output: html_notebook
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r, Warnings = FALSE}
@@ -23,10 +25,7 @@ Dth- Did the ascent result in death?
 Host - Country
 
 ```{r}
-#Import data
-myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
-
-MountEverestData <- read.csv(myFile)
+MountEverestData <- read.csv("Mt_Everest_Ascent_Data.csv", fileEncoding="UTF-8-BOM")
 head(MountEverestData)
 
 #Cleaning up data
@@ -71,8 +70,11 @@ head(MountEverestData, 10)
 
 2. One parameter of interest is the population age. The population mean age is 34.69089. 
 ```{r}
-mu = mean(MountEverestData$Age)
+mu = mean(MountEverestData$Age, na.rm = TRUE)
+t = sum(MountEverestData$Age, na.rm = TRUE)
+
 mu
+t
 ```
 3. Sample Size for Stratified Random Sampling 
 - As we can see Yr.Seas and Citizenship have way too many possible strata 
