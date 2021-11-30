@@ -24,26 +24,28 @@ Host - Country
 
 ```{r}
 #Import data
-#myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
+myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
 
-#MountEverestData <- read.csv(myFile)
-MountEverestData <- read.csv("C:\\Users\\shrav\\Desktop\\Stat 466\\Mount_Everest_Project\\Mt_Everest_Ascent_Data.csv")
+MountEverestData <- read.csv(myFile)
+#MountEverestData <- read.csv("C:\\Users\\shrav\\Desktop\\Stat 466\\Mount_Everest_Project\\Mt_Everest_Ascent_Data.csv")
+colnames(MountEverestData)[1] <- gsub('^...','',colnames(MountEverestData)[1])
+
 head(MountEverestData)
 
-#Cleaning up data
-MountEverestData <- 
-  MountEverestData %>%
-  rename(Peak = Peak., 
-         Name = Name., 
-         Yr.Seas = Yr.Seas., 
-         Date = Date., 
-         Time = Time., 
-         Citizenship = Citizenship., 
-         Sex = Sex., 
-         Age = Age., 
-         Oxy = Oxy., 
-         Dth = Dth., 
-         Host = Host.)
+# #Cleaning up data
+# MountEverestData <- 
+#   MountEverestData %>%
+#   rename(Peak = Peak., 
+#          Name = Name., 
+#          Yr.Seas = Yr.Seas., 
+#          Date = Date., 
+#          Time = Time., 
+#          Citizenship = Citizenship., 
+#          Sex = Sex., 
+#          Age = Age., 
+#          Oxy = Oxy., 
+#          Dth = Dth., 
+#          Host = Host.)
   
 MountEverestData$Dth <- as.factor(ifelse(MountEverestData$Dth == "Y", 1, 0)) #1 = death, 0 = alive
 MountEverestData$Oxy <- as.factor(ifelse(MountEverestData$Oxy == "Y", 1, 0)) #1 = death, 0 = alive
@@ -51,20 +53,19 @@ MountEverestData$YearOnly <- as.integer(substr(MountEverestData$Yr.Seas, 1, 4))
 MountEverestData$Helper <- as.integer(substr(MountEverestData$Yr.Seas, 1, 3))
 
 
-
-
+MountEverestData <- 
 MountEverestData %>% mutate(Decade =
-                     case_when(Helper == 195 ~ "1950", 
+                     case_when(Helper == 195 ~ "1950",
                                Helper == 196 ~ "1960",
-                               Helper == 197 ~ "1970", 
+                               Helper == 197 ~ "1970",
                                Helper == 198 ~ "1980",
                                Helper == 199 ~ "1990",
                                Helper == 200 ~ "2000",
                                Helper == 201 ~ "2010",
                                Helper == 202 ~ "2020")
 )
-
-View(MountEverestData)
+MountEverestData$Helper <- NULL
+#View(MountEverestData)
 head(MountEverestData, 10)
 ```
 
@@ -74,9 +75,14 @@ head(MountEverestData, 10)
 ```{r}
 mu = mean(MountEverestData$Age)
 mu
+
+avg = sum(MountEverestData$Age) / length(MountEverestData$Age)
+avg
 ```
 3. Sample Size for Stratified Random Sampling 
 - As we can see Yr.Seas and Citizenship have way too many possible strata 
+- Host , Oxy, Death, and Sex do not seem to have different variability. 
+- We made Decade a variable and that looks like it has a lot of variability 
 ```{r}
 #Trying to find Strata
 ggplot(
@@ -123,6 +129,13 @@ ggplot(
 ggplot(
   data = MountEverestData, 
   aes(x = YearOnly, y = Age)) +
+  geom_boxplot()  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Year Only vs. Age")
+
+ggplot(
+  data = MountEverestData, 
+  aes(x = Decade, y = Age)) +
   geom_boxplot()  + 
   theme(axis.text.x = element_text(angle = 90)) +
   labs(title = "Year Only vs. Age")
