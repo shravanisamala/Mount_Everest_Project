@@ -148,40 +148,65 @@ Step 1: n = (sum (N_k * sd_k))^2 / N^2D + sum(N_i * sd_i)^2
 # Find N
 
 Stratified <- 
-MountEverestData %>%
-  group_by(Sex) %>%
+  MountEverestData %>%
+  group_by(Sex)%>%
   summarise(n(), sd(Age), mean(Age))
-Stratified %>%
+Stratified <- 
+  Stratified %>%
   rename(count = "n()", 
          sd = "sd(Age)", 
          mean = "mean(Age)")
+Stratified['count_Age'] <- Stratified[2]
+Stratified['sd_Age'] <- Stratified[3]
+Stratified['mean_Age'] <- Stratified[4]
 
 
-# Stratified <- 
-# MountEverestData %>%
-#   group_by(Decade) %>%
-#   summarise(n(), sd(Age))
-# Stratified %>%
-#   rename(count = "n()")
+Stratified$count <- NULL
+Stratified$sd <- NULL
+Stratified$mean <- NULL
+Stratified
+
 ```
 
 We will use Neyman Allocation. So N = 10184, and we will make our Bound 3. So n = 47
 ```{r}
-x = ((710 * 10.99570) + (9474 * 10.25151))^2
+
+x = ((Stratified$count_Age[1] * Stratified$sd_Age[1]) + (Stratified$count_Age[2] * Stratified$sd_Age[2]))^2
+
 N = length(MountEverestData$Age)
 B = 3
 D = (B^2) / 4
 
-y = ((710 * 10.99570^2) + (9474 * 10.25151^2))
+y = ((Stratified$count_Age[1] * Stratified$sd_Age[1]^2) + (Stratified$count_Age[2] * Stratified$sd_Age[2]^2))
 n = x/((N^2 * D) + y)
 n
+```
+We must sample 3 females and 44 males. 
+```{r}
+nFemale = 47* ((Stratified$count_Age[1] * Stratified$sd_Age[1]) / ((Stratified$count_Age[1] * Stratified$sd_Age[1]) + (Stratified$count_Age[2] * Stratified$sd_Age[2])))
+
+nMale = 47* ((Stratified$count_Age[2] * Stratified$sd_Age[2]) / ((Stratified$count_Age[1] * Stratified$sd_Age[1]) + (Stratified$count_Age[2] * Stratified$sd_Age[2])))
+
+nFemale
+nMale
 ```
 
 4. Yes, the strata seem to be homogenous. Their means and variances look very similar.
 ```{r}
 #a. 
 #Creating first Dataset
-StratifiedSample = sample(MountEverestData, 47, replace = FALSE)
+MountEverestDataFem <- 
+  MountEverestData %>%
+  filter(Sex == "F")
+
+MountEverestDataMale <- 
+  MountEverestData %>%
+  filter(Sex == "M")
+
+StratifiedSample1 <- sample(MountEverestDataFem, 3, replace = FALSE)
+StratifiedSample2 <- sample(MountEverestDataMale, 44, replace = FALSE)
+
+StratifiedSample <- rbind(StratifiedSample1, StratifiedSample2)
 StratifiedSample
 
 #b. 
@@ -199,17 +224,41 @@ StratifiedSample <-
   StratifiedSample %>%
     group_by(Sex) %>%
     summarise(n(), sd(Age), mean(Age))
-StratifiedSample %>%
+
+StratifiedSample <- 
+  StratifiedSample %>%
   rename(count = "n()", 
          sd = "sd(Age)", 
          mean = "mean(Age)")
 StratifiedSample
+StratifiedSample['count_Age_Sample'] <- StratifiedSample[2]
+StratifiedSample['sd_Age_Sample'] <- StratifiedSample[3]
+StratifiedSample['mean_Age_Sample'] <- StratifiedSample[4]
 
-y_bar_st = (1/10184) * ((710 * ) + (9474 * 34.66772))
+
+StratifiedSample$count <- NULL
+StratifiedSample$sd <- NULL
+StratifiedSample$mean <- NULL
+StratifiedSample
+
+y_bar_st = (1/N) * ((Stratified$count_Age[1] * StratifiedSample$mean_Age_Sample[1]) + (Stratified$count_Age[2] * StratifiedSample$mean_Age_Sample[2]))
 y_bar_st
 
-Var_st = (1/(10184^2)) * (((710^2)*(1 - (5/710))*((6.09918^2) / 5)) + ((9474^2)*(1 - (42/9474)) * ((11.18592^2) / 5)))
+Var_st = (1/(N^2)) * (((710^2)*(1 - (3/710))*((StratifiedSample$sd_Age_Sample[1]^2) / 3)) + ((9474^2)*(1 - (44/9474)) * ((StratifiedSample$sd_Age_Sample[2]^2) / 44)))
 Var_st
+
+Bound = 2 * (sqrt(Var_st))
+Bound
+
+confInt = c(y_bar_st - Bound, y_bar_st + Bound )
+confInt
+# y_bar_st = (1/10184) * ((710 * mean ) + (9474 * mean))
+# y_bar_st
+# 
+# Var_st = (1/(10184^2)) * (((710^2)*(1 - (3/710))*((sd^2) / 3)) + ((9474^2)*(1 - (44/9474)) * ((sd^2) / 44)))
+# Var_st
 
 ```
 
+d. yes the true value of the mean, 34.69089, falls within our confidence interval. 
+e. Yes we achieved our bound. We chose a bound of 3 and the bound that we got was 3.201517
