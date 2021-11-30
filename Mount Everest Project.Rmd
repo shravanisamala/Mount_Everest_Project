@@ -10,6 +10,8 @@ library(mosaic)
 library(ggplot2)
 ```
 
+##Variables: 
+
 PEAK ID- This is a unique identifier for the mountain
 Name - Name of the climber
 Yr/Seas- Year and Season of the ascent
@@ -22,6 +24,8 @@ Oxygen - Ascent with/without Oxygen
 Dth- Did the ascent result in death?
 Host - Country
 
+##Sample Datasets in the order that we created them 
+- StratifiedSample
 ```{r}
 #Import data
 myFile <- "https://raw.githubusercontent.com/shravanisamala/Mount_Everest_Project/master/Mt_Everest_Ascent_Data.csv"
