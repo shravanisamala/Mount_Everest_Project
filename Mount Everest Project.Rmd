@@ -66,7 +66,7 @@ MountEverestData %>% mutate(Decade =
 )
 
 
-MountEverestData$Helper <- NULL
+MountEverestData$Helper <- NULL # removes Helper column because its irrelavent lol 
 #View(MountEverestData)
 head(MountEverestData, 10)
 ```
@@ -83,7 +83,7 @@ avg
 ```
 3. Sample Size for Stratified Random Sampling 
 - As we can see Yr.Seas and Citizenship have way too many possible strata 
-- Host , Oxy, Death, and Sex do not seem to have different variability. 
+- Host , Oxy, Death, and Sex seem to be homogenoue like we need. 
 - We made Decade a variable and that looks like it has a lot of variability 
 ```{r}
 #Trying to find Strata
@@ -230,7 +230,6 @@ StratifiedSample <-
   rename(count = "n()", 
          sd = "sd(Age)", 
          mean = "mean(Age)")
-StratifiedSample
 StratifiedSample['count_Age_Sample'] <- StratifiedSample[2]
 StratifiedSample['sd_Age_Sample'] <- StratifiedSample[3]
 StratifiedSample['mean_Age_Sample'] <- StratifiedSample[4]
@@ -261,4 +260,4 @@ confInt
 ```
 
 d. yes the true value of the mean, 34.69089, falls within our confidence interval. 
-e. Yes we achieved our bound. We chose a bound of 3 and the bound that we got was 3.201517
+e. Yes we achieved our bound. We chose a bound of 3 and the bound that we got was 3.201517 (This will change every time we run the code so we can fix it once we run all of the code)
