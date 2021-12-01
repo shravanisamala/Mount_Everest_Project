@@ -264,3 +264,57 @@ confInt
 
 d. yes the true value of the mean, 34.69089, falls within our confidence interval. 
 e. Yes we achieved our bound. We chose a bound of 3 and the bound that we got was 3.201517 (This will change every time we run the code so we can fix it once we run all of the code)
+
+5.
+For the second sampling method we will be using Simple Random Sampling(SRS)
+```{r}
+#a.
+# From part3, n = 47
+n = 47
+SRS_sample <- sample(MountEverestData, 47, replace = F)
+SRS_sample
+```
+
+```{r}
+#b.
+ggplot(
+  data = SRS_sample, 
+  aes(x = Sex, y = Age)) +
+  geom_boxplot()  + 
+  labs(title = "SRS Sex vs. Age")
+
+ggplot(
+  data = SRS_sample, 
+  aes(x = YearOnly, y = Age)) + 
+  geom_point()  + labs(title = "")
+```
+
+```{r}
+#c.
+Finite_Population_correction <- 1-n/N
+Finite_Population_correction
+#The correction factor in this case can be ignored since 0.9953884 > 0.95
+
+SRSFinal <- 
+  SRS_sample %>%
+  summarise(n(), sd(Age), mean(Age)) %>%
+  rename(count = "n()", 
+         sd = "sd(Age)", 
+         mean = "mean(Age)")
+SRSFinal$s2 <- SRSFinal$sd^2
+SRSFinal$V_ybar <- SRSFinal$s2/n
+SRSFinal
+
+B1 <- 2*sqrt(Finite_Population_correction*(SRSFinal$s2/n)) # with correction factor
+B1
+B2 <- 2*sqrt(SRSFinal$s2/n) # w/o correction factor
+B2
+
+SRS_confInt = c(SRSFinal$mean - B2, SRSFinal$mean + B2 )
+SRS_confInt
+```
+- The true mean 34.69089 falls within the ~95% confidence 
+interval. 
+
+6.
+For the third sampling method, we will be using systematic sampling
