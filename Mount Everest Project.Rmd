@@ -370,4 +370,4 @@ confint = c(mu - Bound, mu + Bound)
 confint
 ```
 
-d. Yes the true mean falls in the confindence interval 
+d. Yes the true mean falls in the confidence interval 
